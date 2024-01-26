@@ -2,7 +2,7 @@
 Boilerplate for my upcoming projects
 
 ### Features (Sorted by priority)
-- [ ] Config system
+- [x] Config system
 - [ ] Authentication
     - [ ] Basic authentication (email, password)
     - [ ] Enhanced authentication
