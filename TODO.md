@@ -6,9 +6,9 @@ Boilerplate for my upcoming projects
 - [ ] Authentication
     - [ ] Basic authentication (email, password)
     - [ ] Enhanced authentication
+        - [ ] Two-factor authentication
         - [ ] Passkey
         - [ ] Through OAuth2 providers like Google, Discord, Twitter and others
-        - [ ] Two-factor authentication
         - [ ] Through SAML for enterprise
 - [ ] Sending emails (forgot password, notifications, etc.)
 - [ ] Logging
