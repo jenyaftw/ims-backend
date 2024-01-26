@@ -7,8 +7,19 @@ type HttpConfig struct {
 	Port int    `mapstructure:"port"`
 }
 
+type DatabaseConfig struct {
+	Driver     string `mapstructure:"driver"`
+	Host       string `mapstructure:"host"`
+	Port       int    `mapstructure:"port"`
+	Username   string `mapstructure:"username"`
+	Password   string `mapstructure:"password"`
+	Name       string `mapstructure:"name"`
+	Migrations string `mapstructure:"migrations"`
+}
+
 type Config struct {
-	Http *HttpConfig `mapstructure:"http"`
+	Http *HttpConfig     `mapstructure:"http"`
+	Db   *DatabaseConfig `mapstructure:"db"`
 }
 
 func NewConfig() (*Config, error) {
