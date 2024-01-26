@@ -16,5 +16,8 @@ Boilerplate for my upcoming projects
     - [ ] Credits system
     - [ ] Subscription system
     - [ ] Integration with LemonSqueezy billing system
+- [ ] Integrations
+    - [ ] Webhooks
+    - [ ] Zapier
 - [ ] Collaboration support (teams/workspaces)
 - [ ] Push notifications
