@@ -10,12 +10,12 @@ Boilerplate for my upcoming projects
         - [ ] Through OAuth2 providers like Google, Discord, Twitter and others
         - [ ] Two-factor authentication
         - [ ] Through SAML for enterprise
-- [ ] Email system (forgot password, notifications, etc.)
+- [ ] Sending emails (forgot password, notifications, etc.)
 - [ ] Logging
 - [ ] Billing
-    - [ ] Credits system
-    - [ ] Subscription system
-    - [ ] Integration with LemonSqueezy billing system
+    - [ ] Credits
+    - [ ] Subscriptions
+    - [ ] Integration with LemonSqueezy payment provider
 - [ ] Integrations
     - [ ] Webhooks
     - [ ] Zapier
