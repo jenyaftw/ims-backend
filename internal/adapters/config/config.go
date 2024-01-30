@@ -14,6 +14,7 @@ type DatabaseConfig struct {
 	Username   string `mapstructure:"username"`
 	Password   string `mapstructure:"password"`
 	Name       string `mapstructure:"name"`
+	Secure     bool   `mapstructure:"secure"`
 	Migrations string `mapstructure:"migrations"`
 }
 

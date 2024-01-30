@@ -18,27 +18,27 @@ func NewUserRepository(db *pgx.Conn) *UserRepository {
 	}
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
+func (r UserRepository) CreateUser(ctx context.Context, user *domain.User) (domain.User, error) {
 	// TODO: Implement create user method
-	return nil, nil
+	return domain.User{}, nil
 }
 
-func (r *UserRepository) GetUserById(ctx context.Context, id uuid.UUID) (*domain.User, error) {
+func (r UserRepository) GetUserById(ctx context.Context, id uuid.UUID) (domain.User, error) {
 	// TODO: Implement get user by id method
-	return nil, nil
+	return domain.User{}, nil
 }
 
-func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*domain.User, error) {
+func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (domain.User, error) {
 	// TODO: Implement get user by email method
-	return nil, nil
+	return domain.User{}, nil
 }
 
-func (r *UserRepository) ListUsers(ctx context.Context, offset, limit uint64) ([]*domain.User, error) {
+func (r UserRepository) ListUsers(ctx context.Context, offset, limit uint64) ([]domain.User, error) {
 	// TODO: Implement list users method
-	return nil, nil
+	return []domain.User{}, nil
 }
 
-func (r *UserRepository) DeleteUser(ctx context.Context, id uuid.UUID) error {
+func (r UserRepository) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	// TODO: Implement delete user method
 	return nil
 }

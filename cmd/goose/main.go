@@ -20,20 +20,25 @@ var (
 func main() {
 	flags.Parse(os.Args[1:])
 	args := flags.Args()
-	fmt.Println(args[1])
 
 	cfg, err := config.NewConfig()
 	if err != nil {
 		panic(err)
 	}
 
-	url := fmt.Sprintf("%s://%s:%s@%s:%d/%s",
+	disableSSL := ""
+	if !cfg.Db.Secure {
+		disableSSL = "?sslmode=disable"
+	}
+
+	url := fmt.Sprintf("%s://%s:%s@%s:%d/%s%s",
 		cfg.Db.Driver,
 		cfg.Db.Username,
 		cfg.Db.Password,
 		cfg.Db.Host,
 		cfg.Db.Port,
 		cfg.Db.Name,
+		disableSSL,
 	)
 	db, err := goose.OpenDBWithDriver(cfg.Db.Driver, url)
 	if err != nil {
@@ -47,11 +52,11 @@ func main() {
 	}()
 
 	arguments := []string{}
-	if len(args) > 1 {
+	if len(args) > 3 {
 		arguments = append(arguments, args[3:]...)
 	}
 
-	if err := goose.RunContext(context.Background(), args[1], db, cfg.Db.Migrations, arguments...); err != nil {
-		log.Fatalf("goose %v: %v", args[1], err)
+	if err := goose.RunContext(context.Background(), args[0], db, cfg.Db.Migrations, arguments...); err != nil {
+		log.Fatalf("goose %v: %v", args[0], err)
 	}
 }
