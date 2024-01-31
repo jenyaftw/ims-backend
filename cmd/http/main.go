@@ -26,7 +26,7 @@ func main() {
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
 
-	r := http.NewRouter(userHandler)
+	r := http.NewRouter(&userHandler)
 
 	fmt.Printf("Listening on http://%s:%d\n", cfg.Http.Host, cfg.Http.Port)
 	if err := r.ListenAndServe(cfg.Http.Host, cfg.Http.Port); err != nil {
