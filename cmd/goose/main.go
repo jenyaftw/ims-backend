@@ -52,8 +52,8 @@ func main() {
 	}()
 
 	arguments := []string{}
-	if len(args) > 3 {
-		arguments = append(arguments, args[3:]...)
+	if len(args) > 1 {
+		arguments = append(arguments, args[1:]...)
 	}
 
 	if err := goose.RunContext(context.Background(), args[0], db, cfg.Db.Migrations, arguments...); err != nil {
