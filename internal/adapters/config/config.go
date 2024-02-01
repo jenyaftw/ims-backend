@@ -18,9 +18,14 @@ type DatabaseConfig struct {
 	Migrations string `mapstructure:"migrations"`
 }
 
+type JwtConfig struct {
+	Secret string `mapstructure:"secret"`
+}
+
 type Config struct {
 	Http *HttpConfig     `mapstructure:"http"`
 	Db   *DatabaseConfig `mapstructure:"db"`
+	Jwt  *JwtConfig      `mapstructure:"jwt"`
 }
 
 func NewConfig() (*Config, error) {

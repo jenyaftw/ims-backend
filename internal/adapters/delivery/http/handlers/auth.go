@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/jenyaftw/scaffold-go/internal/core/ports"
@@ -41,5 +40,11 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(token)
+	res, err := json.Marshal(newTokenResponse(token))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Write(res)
 }

@@ -1,7 +1,11 @@
 package ports
 
-import "context"
+import (
+	"context"
+
+	"github.com/jenyaftw/scaffold-go/internal/core/domain"
+)
 
 type AuthService interface {
-	LoginWithPassword(ctx context.Context, email, password string) (string, error)
+	LoginWithPassword(ctx context.Context, email, password string) (domain.Token, error)
 }

@@ -25,7 +25,8 @@ func main() {
 	userRepo := repos.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
-	authService := services.NewAuthService(userRepo)
+
+	authService := services.NewAuthService(cfg.Jwt, userRepo)
 	authHandler := handlers.NewAuthHandler(authService)
 
 	r := http.NewRouter(userHandler, authHandler)

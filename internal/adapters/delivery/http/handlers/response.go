@@ -13,3 +13,15 @@ func newUserResponse(user domain.User) userResponse {
 		Email: user.Email,
 	}
 }
+
+type tokenResponse struct {
+	AccessToken string `json:"accessToken"`
+	ExpiresAt   int64  `json:"expiresAt"`
+}
+
+func newTokenResponse(token domain.Token) tokenResponse {
+	return tokenResponse{
+		AccessToken: token.Text,
+		ExpiresAt:   token.ExpiresAt,
+	}
+}
