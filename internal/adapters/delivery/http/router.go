@@ -14,8 +14,9 @@ type Router struct {
 }
 
 func NewRouter(
-	userHandler *handlers.UserHandler,
-) *Router {
+	userHandler handlers.UserHandler,
+	authHandler handlers.AuthHandler,
+) Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -23,13 +24,17 @@ func NewRouter(
 	userRouter := chi.NewRouter()
 	userRouter.Post("/", userHandler.Register)
 
-	r.Mount("/users", userRouter)
+	authRouter := chi.NewRouter()
+	authRouter.Post("/login", authHandler.Login)
 
-	return &Router{
+	r.Mount("/users", userRouter)
+	r.Mount("/auth", authRouter)
+
+	return Router{
 		router: r,
 	}
 }
 
-func (r *Router) ListenAndServe(host string, port int) error {
+func (r Router) ListenAndServe(host string, port int) error {
 	return http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), r.router)
 }

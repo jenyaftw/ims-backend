@@ -2,10 +2,12 @@ package repos
 
 import (
 	"context"
+	"errors"
 
 	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jenyaftw/scaffold-go/internal/core/domain"
 )
 
@@ -30,6 +32,14 @@ func (r UserRepository) CreateUser(ctx context.Context, user domain.User) (domai
 	}
 
 	err = pgxscan.ScanOne(&user, rows)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "23505" { // Error code for when insert violates unique key constraint
+				return user, domain.ErrDataConflict
+			}
+		}
+	}
 	return user, err
 }
 
@@ -45,6 +55,11 @@ func (r UserRepository) GetUserById(ctx context.Context, id uuid.UUID) (domain.U
 
 	var user domain.User
 	err = pgxscan.ScanOne(&user, rows)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return user, domain.ErrDataNotFound
+		}
+	}
 	return user, err
 }
 
@@ -60,6 +75,11 @@ func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (domai
 
 	var user domain.User
 	err = pgxscan.ScanOne(&user, rows)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return user, domain.ErrDataNotFound
+		}
+	}
 	return user, err
 }
 

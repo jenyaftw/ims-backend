@@ -25,8 +25,10 @@ func main() {
 	userRepo := repos.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
 	userHandler := handlers.NewUserHandler(userService)
+	authService := services.NewAuthService(userRepo)
+	authHandler := handlers.NewAuthHandler(authService)
 
-	r := http.NewRouter(&userHandler)
+	r := http.NewRouter(userHandler, authHandler)
 
 	fmt.Printf("Listening on http://%s:%d\n", cfg.Http.Host, cfg.Http.Port)
 	if err := r.ListenAndServe(cfg.Http.Host, cfg.Http.Port); err != nil {

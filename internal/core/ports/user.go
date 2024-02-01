@@ -17,5 +17,5 @@ type UserRepository interface {
 
 type UserService interface {
 	Register(ctx context.Context, user domain.User) (domain.User, error)
-	GetUser(ctx context.Context, id string) (domain.User, error)
+	GetUser(ctx context.Context, id uuid.UUID) (domain.User, error)
 }
