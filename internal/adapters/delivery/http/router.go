@@ -5,8 +5,9 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/jenyaftw/scaffold-go/internal/adapters/delivery/http/handlers"
+	"github.com/jenyaftw/scaffold-go/internal/adapters/delivery/http/middleware"
 )
 
 type Router struct {
@@ -16,10 +17,11 @@ type Router struct {
 func NewRouter(
 	userHandler handlers.UserHandler,
 	authHandler handlers.AuthHandler,
+	protectedHandler handlers.ProtectedHandler,
 ) Router {
 	r := chi.NewRouter()
 
-	r.Use(middleware.Logger)
+	r.Use(chiMiddleware.Logger)
 
 	userRouter := chi.NewRouter()
 	userRouter.Post("/", userHandler.Register)
@@ -27,8 +29,13 @@ func NewRouter(
 	authRouter := chi.NewRouter()
 	authRouter.Post("/login", authHandler.Login)
 
+	protectedRouter := chi.NewRouter()
+	protectedRouter.Use(middleware.AuthMiddleware)
+	protectedRouter.Get("/protected", protectedHandler.TestRoute)
+
 	r.Mount("/users", userRouter)
 	r.Mount("/auth", authRouter)
+	r.Mount("/", protectedRouter)
 
 	return Router{
 		router: r,

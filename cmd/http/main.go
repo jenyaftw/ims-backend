@@ -29,7 +29,9 @@ func main() {
 	authService := services.NewAuthService(cfg.Jwt, userRepo)
 	authHandler := handlers.NewAuthHandler(authService)
 
-	r := http.NewRouter(userHandler, authHandler)
+	protectedHandler := handlers.NewProtectedHandler()
+
+	r := http.NewRouter(userHandler, authHandler, protectedHandler)
 
 	fmt.Printf("Listening on http://%s:%d\n", cfg.Http.Host, cfg.Http.Port)
 	if err := r.ListenAndServe(cfg.Http.Host, cfg.Http.Port); err != nil {
