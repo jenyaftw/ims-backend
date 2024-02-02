@@ -32,7 +32,7 @@ func (h UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		HandleError(w, err)
 		return
 	}
 
@@ -44,13 +44,13 @@ func (h UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.svc.Register(ctx, newUser)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		HandleError(w, err)
 		return
 	}
 
 	res, err := json.Marshal(newUserResponse(user))
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		HandleError(w, err)
 		return
 	}
 

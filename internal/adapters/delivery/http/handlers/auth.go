@@ -30,13 +30,13 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		HandleError(w, err)
 		return
 	}
 
 	token, err := h.svc.LoginWithPassword(ctx, req.Email, req.Password)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		HandleError(w, err)
 		return
 	}
 
