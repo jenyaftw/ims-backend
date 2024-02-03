@@ -9,5 +9,6 @@ func NewProtectedHandler() ProtectedHandler {
 }
 
 func (h ProtectedHandler) TestRoute(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("You are authenticated"))
+	user := r.Context().Value("user").(string)
+	w.Write([]byte(user))
 }
