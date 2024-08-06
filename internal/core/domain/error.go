@@ -8,6 +8,7 @@ var (
 	ErrDataConflict    = errors.New("duplicate data found with unique column")
 	ErrUnauthorized    = errors.New("user is unauthorized to access this resource")
 	ErrForbidden       = errors.New("access to this resource is forbidden")
+	ErrUserNotFound    = errors.New("user not found")
 	ErrInvalidPassword = errors.New("invalid password for user")
 
 	ErrMissingAuthHeader = errors.New("missing `Authorization` header")

@@ -57,7 +57,7 @@ func (r UserRepository) GetUserById(ctx context.Context, id uuid.UUID) (domain.U
 	err = pgxscan.ScanOne(&user, rows)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return user, domain.ErrDataNotFound
+			return user, domain.ErrUserNotFound
 		}
 	}
 	return user, err
@@ -77,7 +77,7 @@ func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (domai
 	err = pgxscan.ScanOne(&user, rows)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return user, domain.ErrDataNotFound
+			return user, domain.ErrUserNotFound
 		}
 	}
 	return user, err

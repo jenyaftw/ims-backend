@@ -20,6 +20,8 @@ var errorStatusMap = map[error]int{
 	domain.ErrMissingAuthHeader: http.StatusUnauthorized,
 	domain.ErrInvalidAuthToken:  http.StatusUnauthorized,
 	domain.ErrInvalidTokenType:  http.StatusUnauthorized,
+
+	domain.ErrUserNotFound: http.StatusNotFound,
 }
 
 func validationError(w http.ResponseWriter, err error) {

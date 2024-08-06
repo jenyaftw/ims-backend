@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/jenyaftw/scaffold-go/internal/core/domain"
 	"github.com/jenyaftw/scaffold-go/internal/core/ports"
 )
@@ -43,6 +44,31 @@ func (h UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := h.svc.Register(ctx, newUser)
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	res, err := json.Marshal(newUserResponse(user))
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	w.Write(res)
+}
+
+func (h UserHandler) Me(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	userIdString := r.Context().Value("user").(string)
+	userId, err := uuid.Parse(userIdString)
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	user, err := h.svc.GetUser(ctx, userId)
 	if err != nil {
 		HandleError(w, err)
 		return

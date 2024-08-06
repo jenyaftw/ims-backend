@@ -26,6 +26,12 @@ func NewRouter(
 	userRouter := chi.NewRouter()
 	userRouter.Post("/", userHandler.Register)
 
+	protectedUsers := chi.NewRouter()
+	protectedUsers.Use(middleware.AuthMiddleware)
+	protectedUsers.Get(("/me"), userHandler.Me)
+
+	userRouter.Mount("/", protectedUsers)
+
 	authRouter := chi.NewRouter()
 	authRouter.Post("/login", authHandler.Login)
 
