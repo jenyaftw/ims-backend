@@ -20,14 +20,28 @@ type DatabaseConfig struct {
 	Migrations string `mapstructure:"migrations"`
 }
 
+type EmailConfig struct {
+	From   string `mapstructure:"from"`
+	ApiKey string `mapstructure:"api_key"`
+}
+
+type RedisConfig struct {
+	Host     string `mapstructure:"addr"`
+	Port     int    `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+	Db       int    `mapstructure:"db"`
+}
+
 type JwtConfig struct {
 	Secret string `mapstructure:"secret"`
 }
 
 type Config struct {
-	Http *HttpConfig     `mapstructure:"http"`
-	Db   *DatabaseConfig `mapstructure:"db"`
-	Jwt  *JwtConfig      `mapstructure:"jwt"`
+	Http  *HttpConfig     `mapstructure:"http"`
+	Db    *DatabaseConfig `mapstructure:"db"`
+	Redis *RedisConfig    `mapstructure:"redis"`
+	Email *EmailConfig    `mapstructure:"email"`
+	Jwt   *JwtConfig      `mapstructure:"jwt"`
 }
 
 func NewConfig() (*Config, error) {

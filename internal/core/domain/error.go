@@ -14,4 +14,5 @@ var (
 	ErrMissingAuthHeader = errors.New("missing `Authorization` header")
 	ErrInvalidAuthToken  = errors.New("invalid token in `Authorization` header")
 	ErrInvalidTokenType  = errors.New("invalid token type")
+	ErrUserNotVerified   = errors.New("user is not verified")
 )

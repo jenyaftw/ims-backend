@@ -32,6 +32,10 @@ func (s AuthService) LoginWithPassword(ctx context.Context, email, password stri
 		return domain.Token{}, err
 	}
 
+	if !user.IsVerified {
+		return domain.Token{}, domain.ErrUserNotVerified
+	}
+
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		return domain.Token{}, domain.ErrInvalidPassword
 	}

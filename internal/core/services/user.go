@@ -10,14 +10,20 @@ import (
 )
 
 type UserService struct {
-	repo ports.UserRepository
+	repo  ports.UserRepository
+	email ports.EmailService
+	cache ports.CacheRepository
 }
 
 func NewUserService(
 	repo ports.UserRepository,
+	email ports.EmailService,
+	cache ports.CacheRepository,
 ) UserService {
 	return UserService{
-		repo: repo,
+		repo:  repo,
+		email: email,
+		cache: cache,
 	}
 }
 
@@ -35,7 +41,22 @@ func (s UserService) Register(ctx context.Context, user domain.User) (domain.Use
 	user.ID = uuid.New()
 	user.InitTimestamps()
 
-	return s.repo.CreateUser(ctx, user)
+	newUser, err := s.repo.CreateUser(ctx, user)
+	if err != nil {
+		return newUser, err
+	}
+
+	code := uuid.New().String()
+	cacheIndex := "verification_code_" + newUser.ID.String()
+	if err := s.cache.Set(ctx, cacheIndex, code, 0); err != nil {
+		return newUser, err
+	}
+
+	if err := s.email.SendEmailConfirmation(ctx, newUser.ID.String(), newUser.Name, newUser.Email, code); err != nil {
+		return newUser, err
+	}
+
+	return newUser, nil
 }
 
 func (s UserService) GetUser(ctx context.Context, id uuid.UUID) (domain.User, error) {

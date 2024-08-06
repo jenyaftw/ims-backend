@@ -9,10 +9,11 @@ import (
 )
 
 type User struct {
-	ID       uuid.UUID
-	Name     string
-	Email    string
-	Password string
+	ID         uuid.UUID
+	Name       string
+	Email      string
+	Password   string
+	IsVerified bool
 
 	util.Timestamps
 }

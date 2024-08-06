@@ -1,14 +1,23 @@
 package handlers
 
-import "net/http"
+import (
+	"net/http"
 
-type ProtectedHandler struct{}
+	"github.com/jenyaftw/scaffold-go/internal/core/ports"
+)
 
-func NewProtectedHandler() ProtectedHandler {
-	return ProtectedHandler{}
+type ProtectedHandler struct {
+	svc ports.UserService
+}
+
+func NewProtectedHandler(
+	svc ports.UserService,
+) ProtectedHandler {
+	return ProtectedHandler{
+		svc: svc,
+	}
 }
 
 func (h ProtectedHandler) TestRoute(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value("user").(string)
-	w.Write([]byte(user))
+
 }
