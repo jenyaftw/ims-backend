@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/jenyaftw/scaffold-go/internal/core/domain"
 	"github.com/jenyaftw/scaffold-go/internal/core/ports"
@@ -81,4 +82,24 @@ func (h UserHandler) Me(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(res)
+}
+
+func (h UserHandler) Verify(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	userIdString := chi.URLParam(r, "id")
+	code := chi.URLParam(r, "code")
+
+	userId, err := uuid.Parse(userIdString)
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	if err := h.svc.Verify(ctx, userId, code); err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	w.Write([]byte("User verified"))
 }

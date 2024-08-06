@@ -10,7 +10,7 @@ Boilerplate for my upcoming projects
         - [ ] Passkey
         - [ ] Through OAuth2 providers like Google, Discord, Twitter and others
         - [ ] Through SAML for enterprise
-- [ ] Sending emails (forgot password, notifications, etc.)
+- [x] Sending emails (forgot password, notifications, etc.)
 - [ ] Logging
 - [ ] Billing
     - [ ] Credits

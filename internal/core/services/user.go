@@ -59,6 +59,31 @@ func (s UserService) Register(ctx context.Context, user domain.User) (domain.Use
 	return newUser, nil
 }
 
+func (s UserService) Verify(ctx context.Context, id uuid.UUID, code string) error {
+	user, err := s.GetUser(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	cacheIndex := "verification_code_" + user.ID.String()
+	cachedCode, err := s.cache.Get(ctx, cacheIndex)
+	if err != nil {
+		return err
+	}
+
+	if cachedCode != code {
+		return domain.ErrInvalidVerificationCode
+	}
+
+	if err := s.cache.Delete(ctx, cacheIndex); err != nil {
+		return err
+	}
+
+	user.IsVerified = true
+	_, err = s.repo.UpdateUser(ctx, user)
+	return err
+}
+
 func (s UserService) GetUser(ctx context.Context, id uuid.UUID) (domain.User, error) {
 	return s.repo.GetUserById(ctx, id)
 }

@@ -43,6 +43,25 @@ func (r UserRepository) CreateUser(ctx context.Context, user domain.User) (domai
 	return user, err
 }
 
+func (r UserRepository) UpdateUser(ctx context.Context, user domain.User) (domain.User, error) {
+	rows, err := r.db.Query(
+		ctx,
+		`UPDATE users SET name = $1, email = $2, password = $3, is_verified = $4, updated_at = $5 WHERE id = $6 RETURNING *`,
+		user.Name, user.Email, user.Password, user.IsVerified, user.UpdatedAt, user.ID.String(),
+	)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	err = pgxscan.ScanOne(&user, rows)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return user, domain.ErrUserNotFound
+		}
+	}
+	return user, err
+}
+
 func (r UserRepository) GetUserById(ctx context.Context, id uuid.UUID) (domain.User, error) {
 	rows, err := r.db.Query(
 		ctx,
