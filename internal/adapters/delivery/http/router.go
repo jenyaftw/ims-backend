@@ -25,6 +25,7 @@ func NewRouter(
 
 	userRouter := chi.NewRouter()
 	userRouter.Post("/", userHandler.Register)
+	userRouter.Post("/{id}/verify", userHandler.ResendVerify)
 	userRouter.Post("/{id}/verify/{code}", userHandler.Verify)
 
 	protectedUsers := chi.NewRouter()

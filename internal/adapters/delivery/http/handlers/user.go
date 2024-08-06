@@ -103,3 +103,28 @@ func (h UserHandler) Verify(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("User verified"))
 }
+
+func (h UserHandler) ResendVerify(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	userIdString := chi.URLParam(r, "id")
+
+	userId, err := uuid.Parse(userIdString)
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	user, err := h.svc.GetUser(ctx, userId)
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	if err := h.svc.SendVerificationCode(ctx, user); err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	w.Write([]byte("Verification code resent"))
+}

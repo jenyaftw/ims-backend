@@ -20,4 +20,5 @@ type UserService interface {
 	Register(ctx context.Context, user domain.User) (domain.User, error)
 	GetUser(ctx context.Context, id uuid.UUID) (domain.User, error)
 	Verify(ctx context.Context, id uuid.UUID, code string) error
+	SendVerificationCode(ctx context.Context, user domain.User) error
 }

@@ -11,6 +11,8 @@ var (
 	ErrUserNotFound            = errors.New("user not found")
 	ErrInvalidPassword         = errors.New("invalid password for user")
 	ErrInvalidVerificationCode = errors.New("invalid verification code")
+	ErrVerificationCodeExpired = errors.New("verification code expired")
+	ErrUserAlreadyVerified     = errors.New("user is already verified")
 
 	ErrMissingAuthHeader = errors.New("missing `Authorization` header")
 	ErrInvalidAuthToken  = errors.New("invalid token in `Authorization` header")

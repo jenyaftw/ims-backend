@@ -2,6 +2,8 @@ package services
 
 import (
 	"context"
+	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jenyaftw/scaffold-go/internal/core/domain"
@@ -46,17 +48,25 @@ func (s UserService) Register(ctx context.Context, user domain.User) (domain.Use
 		return newUser, err
 	}
 
+	return newUser, s.SendVerificationCode(ctx, newUser)
+}
+
+func (s UserService) SendVerificationCode(ctx context.Context, user domain.User) error {
+	if user.IsVerified {
+		return domain.ErrUserAlreadyVerified
+	}
+
 	code := uuid.New().String()
-	cacheIndex := "verification_code_" + newUser.ID.String()
-	if err := s.cache.Set(ctx, cacheIndex, code, 0); err != nil {
-		return newUser, err
+	cacheIndex := "verification_code_" + user.ID.String()
+	if err := s.cache.Set(ctx, cacheIndex, code, 5*time.Minute); err != nil {
+		return err
 	}
 
-	if err := s.email.SendEmailConfirmation(ctx, newUser.ID.String(), newUser.Name, newUser.Email, code); err != nil {
-		return newUser, err
+	if err := s.email.SendEmailConfirmation(ctx, user.ID.String(), user.Name, user.Email, code); err != nil {
+		return err
 	}
 
-	return newUser, nil
+	return nil
 }
 
 func (s UserService) Verify(ctx context.Context, id uuid.UUID, code string) error {
@@ -68,7 +78,9 @@ func (s UserService) Verify(ctx context.Context, id uuid.UUID, code string) erro
 	cacheIndex := "verification_code_" + user.ID.String()
 	cachedCode, err := s.cache.Get(ctx, cacheIndex)
 	if err != nil {
-		return err
+		if strings.Compare(err.Error(), "redis: nil") == 0 {
+			return domain.ErrVerificationCodeExpired
+		}
 	}
 
 	if cachedCode != code {
