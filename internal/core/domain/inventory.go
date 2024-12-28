@@ -12,6 +12,8 @@ type Inventory struct {
 	Name        string
 	Description string
 
+	Sections []Section
+
 	util.Timestamps
 }
 

@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE IF NOT EXISTS inventory_item (
+CREATE TABLE IF NOT EXISTS inventory_items (
   id          VARCHAR(36) PRIMARY KEY,
   name        VARCHAR(255) NOT NULL,
   description TEXT,
@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS inventory_item (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE inventory_item;
+DROP TABLE inventory_items;
 -- +goose StatementEnd

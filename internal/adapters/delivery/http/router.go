@@ -41,6 +41,12 @@ func NewRouter(
 	inventoryRouter := chi.NewRouter()
 	inventoryRouter.Use(middleware.AuthMiddleware)
 	inventoryRouter.Get("/", inventoryHandler.GetAll)
+	inventoryRouter.Post("/", inventoryHandler.CreateInventory)
+	inventoryRouter.Get("/{id}", inventoryHandler.GetInventory)
+	inventoryRouter.Post("/{id}/items", inventoryHandler.CreateInventoryItem)
+	inventoryRouter.Get("/{id}/items", inventoryHandler.GetInventoryItems)
+	inventoryRouter.Get("/{id}/sections", inventoryHandler.GetInventorySections)
+	inventoryRouter.Post("/{id}/sections", inventoryHandler.CreateInventorySection)
 
 	protectedRouter := chi.NewRouter()
 	protectedRouter.Use(middleware.AuthMiddleware)

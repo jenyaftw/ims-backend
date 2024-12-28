@@ -105,16 +105,55 @@ func newTokenResponse(token domain.Token) tokenResponse {
 	}
 }
 
+type sectionResponse struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+func newSectionResponses(sections []domain.Section) []sectionResponse {
+	newSections := make([]sectionResponse, 0, len(sections))
+	for _, section := range sections {
+		newSections = append(newSections, sectionResponse{
+			ID:          section.ID.String(),
+			Name:        section.Name,
+			Description: section.Description,
+		})
+	}
+
+	return newSections
+}
+
 type inventoryResponse struct {
-	ID           string `json:"id"`
-	Name         string `json:"name"`
-	Desceription string `json:"description"`
+	ID          string            `json:"id"`
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	Sections    []sectionResponse `json:"sections"`
 }
 
 func newInventoryResponse(token domain.Inventory) inventoryResponse {
 	return inventoryResponse{
-		ID:           token.ID.String(),
-		Name:         token.Name,
-		Desceription: token.Description,
+		ID:          token.ID.String(),
+		Name:        token.Name,
+		Description: token.Description,
+		Sections:    newSectionResponses(token.Sections),
+	}
+}
+
+type itemResponse struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Quantity    int    `json:"quantity"`
+	SKU         string `json:"sku"`
+}
+
+func newItemResponse(item domain.Item) itemResponse {
+	return itemResponse{
+		ID:          item.ID.String(),
+		Name:        item.Name,
+		Description: item.Description,
+		Quantity:    item.Quantity,
+		SKU:         item.SKU,
 	}
 }
