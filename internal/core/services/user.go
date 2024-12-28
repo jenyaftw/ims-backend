@@ -41,6 +41,7 @@ func (s UserService) Register(ctx context.Context, user domain.User) (domain.Use
 
 	user.Password = string(hash)
 	user.ID = uuid.New()
+	user.IsVerified = true // TEMP
 	user.InitTimestamps()
 
 	newUser, err := s.repo.CreateUser(ctx, user)
@@ -48,7 +49,8 @@ func (s UserService) Register(ctx context.Context, user domain.User) (domain.Use
 		return newUser, err
 	}
 
-	return newUser, s.SendVerificationCode(ctx, newUser)
+	// return newUser, s.SendVerificationCode(ctx, newUser)
+	return newUser, nil
 }
 
 func (s UserService) SendVerificationCode(ctx context.Context, user domain.User) error {
