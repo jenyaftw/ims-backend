@@ -38,9 +38,13 @@ func main() {
 	authService := services.NewAuthService(cfg.Jwt, userRepo)
 	authHandler := handlers.NewAuthHandler(authService)
 
+	inventoryRepo := repos.NewInventoryRepository(db)
+	inventoryService := services.NewInventoryService(inventoryRepo)
+	inventoryHandler := handlers.NewInventoryHandler(inventoryService)
+
 	protectedHandler := handlers.NewProtectedHandler(userService)
 
-	r := http.NewRouter(userHandler, authHandler, protectedHandler)
+	r := http.NewRouter(userHandler, authHandler, inventoryHandler, protectedHandler)
 
 	fmt.Printf("Listening on http://%s:%d\n", cfg.Http.Host, cfg.Http.Port)
 	if err := r.ListenAndServe(cfg.Http.Host, cfg.Http.Port); err != nil {

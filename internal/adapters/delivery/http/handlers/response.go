@@ -104,3 +104,17 @@ func newTokenResponse(token domain.Token) tokenResponse {
 		ExpiresAt:   token.ExpiresAt,
 	}
 }
+
+type inventoryResponse struct {
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	Desceription string `json:"description"`
+}
+
+func newInventoryResponse(token domain.Inventory) inventoryResponse {
+	return inventoryResponse{
+		ID:           token.ID.String(),
+		Name:         token.Name,
+		Desceription: token.Description,
+	}
+}

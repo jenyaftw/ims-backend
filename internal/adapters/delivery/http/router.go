@@ -17,6 +17,7 @@ type Router struct {
 func NewRouter(
 	userHandler handlers.UserHandler,
 	authHandler handlers.AuthHandler,
+	inventoryHandler handlers.InventoryHandler,
 	protectedHandler handlers.ProtectedHandler,
 ) Router {
 	r := chi.NewRouter()
@@ -37,12 +38,17 @@ func NewRouter(
 	authRouter := chi.NewRouter()
 	authRouter.Post("/login", authHandler.Login)
 
+	inventoryRouter := chi.NewRouter()
+	inventoryRouter.Use(middleware.AuthMiddleware)
+	inventoryRouter.Get("/", inventoryHandler.GetAll)
+
 	protectedRouter := chi.NewRouter()
 	protectedRouter.Use(middleware.AuthMiddleware)
 	protectedRouter.Get("/protected", protectedHandler.TestRoute)
 
 	r.Mount("/users", userRouter)
 	r.Mount("/auth", authRouter)
+	r.Mount("/inventories", inventoryRouter)
 	r.Mount("/", protectedRouter)
 
 	return Router{

@@ -9,6 +9,7 @@ var (
 	ErrUnauthorized            = errors.New("user is unauthorized to access this resource")
 	ErrForbidden               = errors.New("access to this resource is forbidden")
 	ErrUserNotFound            = errors.New("user not found")
+	ErrInventoryNotFound       = errors.New("inventory not found")
 	ErrInvalidPassword         = errors.New("invalid password for user")
 	ErrInvalidVerificationCode = errors.New("invalid verification code")
 	ErrVerificationCodeExpired = errors.New("verification code expired")
