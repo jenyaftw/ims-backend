@@ -17,6 +17,8 @@ type Router struct {
 func NewRouter(
 	userHandler handlers.UserHandler,
 	authHandler handlers.AuthHandler,
+	inventoryHandler handlers.InventoryHandler,
+	transferHandler handlers.TransferHandler,
 	protectedHandler handlers.ProtectedHandler,
 ) Router {
 	r := chi.NewRouter()
@@ -37,12 +39,32 @@ func NewRouter(
 	authRouter := chi.NewRouter()
 	authRouter.Post("/login", authHandler.Login)
 
+	inventoryRouter := chi.NewRouter()
+	inventoryRouter.Use(middleware.AuthMiddleware)
+	inventoryRouter.Get("/", inventoryHandler.GetAll)
+	inventoryRouter.Post("/", inventoryHandler.CreateInventory)
+	inventoryRouter.Get("/{id}", inventoryHandler.GetInventory)
+	inventoryRouter.Post("/{id}/items", inventoryHandler.CreateInventoryItem)
+	inventoryRouter.Get("/{id}/items", inventoryHandler.GetInventoryItems)
+	inventoryRouter.Delete("/{id}/items/{itemID}", inventoryHandler.DeleteInventoryItem)
+	inventoryRouter.Get("/{id}/sections", inventoryHandler.GetInventorySections)
+	inventoryRouter.Post("/{id}/sections", inventoryHandler.CreateInventorySection)
+	inventoryRouter.Get("/scan", inventoryHandler.GetInventoryItemBySKU)
+
+	transferRouter := chi.NewRouter()
+	transferRouter.Use(middleware.AuthMiddleware)
+	transferRouter.Get("/", transferHandler.GetAll)
+	transferRouter.Post("/", transferHandler.Transfer)
+	transferRouter.Post("/{id}", transferHandler.ProcessTransfer)
+
 	protectedRouter := chi.NewRouter()
 	protectedRouter.Use(middleware.AuthMiddleware)
 	protectedRouter.Get("/protected", protectedHandler.TestRoute)
 
 	r.Mount("/users", userRouter)
 	r.Mount("/auth", authRouter)
+	r.Mount("/inventories", inventoryRouter)
+	r.Mount("/transfers", transferRouter)
 	r.Mount("/", protectedRouter)
 
 	return Router{

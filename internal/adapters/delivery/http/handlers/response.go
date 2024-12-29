@@ -104,3 +104,84 @@ func newTokenResponse(token domain.Token) tokenResponse {
 		ExpiresAt:   token.ExpiresAt,
 	}
 }
+
+type sectionResponse struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+func newSectionResponses(sections []domain.Section) []sectionResponse {
+	newSections := make([]sectionResponse, 0, len(sections))
+	for _, section := range sections {
+		newSections = append(newSections, sectionResponse{
+			ID:          section.ID.String(),
+			Name:        section.Name,
+			Description: section.Description,
+		})
+	}
+
+	return newSections
+}
+
+type inventoryResponse struct {
+	ID          string            `json:"id"`
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	Sections    []sectionResponse `json:"sections"`
+}
+
+func newInventoryResponse(token domain.Inventory) inventoryResponse {
+	return inventoryResponse{
+		ID:          token.ID.String(),
+		Name:        token.Name,
+		Description: token.Description,
+		Sections:    newSectionResponses(token.Sections),
+	}
+}
+
+type itemResponse struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Quantity    int    `json:"quantity"`
+	SKU         string `json:"sku"`
+	SectionID   string `json:"section_id"`
+	InventoryID string `json:"inventory_id"`
+}
+
+func newItemResponse(item domain.Item) itemResponse {
+	return itemResponse{
+		ID:          item.ID.String(),
+		Name:        item.Name,
+		Description: item.Description,
+		Quantity:    item.Quantity,
+		SKU:         item.SKU,
+		SectionID:   item.SectionID.String(),
+		InventoryID: item.InventoryID.String(),
+	}
+}
+
+type transferResponse struct {
+	ID            string       `json:"id"`
+	Item          itemResponse `json:"item"`
+	FromInventory string       `json:"from_inventory"`
+	ToInventory   string       `json:"to_inventory"`
+	FromSection   string       `json:"from_section"`
+	ToSection     string       `json:"to_section"`
+	Quantity      uint64       `json:"quantity"`
+	Status        string       `json:"status"`
+}
+
+func newTransferResponse(transfer domain.TransferRequest) transferResponse {
+	return transferResponse{
+		ID:            transfer.ID.String(),
+		Item:          newItemResponse(transfer.Item),
+		FromInventory: transfer.FromInventoryID.String(),
+		ToInventory:   transfer.ToInventoryID.String(),
+		FromSection:   transfer.FromSectionID.String(),
+		ToSection:     transfer.ToSectionID.String(),
+		Quantity:      transfer.Quantity,
+		Status:        transfer.Status,
+	}
+}
