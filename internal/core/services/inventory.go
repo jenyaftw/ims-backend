@@ -91,3 +91,11 @@ func (s InventoryService) CreateInventoryItem(ctx context.Context, inventory dom
 
 	return s.repo.CreateInventoryItem(ctx, item)
 }
+
+func (s InventoryService) GetInventoryItemBySKU(ctx context.Context, sku string) (domain.Item, error) {
+	return s.repo.GetInventoryItemBySKU(ctx, sku)
+}
+
+func (s InventoryService) DeleteInventoryItem(ctx context.Context, id uuid.UUID) error {
+	return s.repo.DeleteInventoryItem(ctx, id)
+}

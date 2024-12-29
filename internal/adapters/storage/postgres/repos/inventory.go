@@ -119,7 +119,7 @@ func (r InventoryRepository) ListInventories(ctx context.Context, offset, limit 
 }
 
 func (r InventoryRepository) DeleteInventory(ctx context.Context, id uuid.UUID) error {
-	_, err := r.db.Query(
+	_, err := r.db.Exec(
 		ctx,
 		`DELETE FROM inventories WHERE id = $1`,
 		id.String(),
@@ -170,7 +170,7 @@ func (r InventoryRepository) CreateInventorySection(ctx context.Context, section
 }
 
 func (r InventoryRepository) DeleteInventorySection(ctx context.Context, id uuid.UUID) error {
-	_, err := r.db.Query(
+	_, err := r.db.Exec(
 		ctx,
 		`DELETE FROM inventory_sections WHERE id = $1`,
 		id.String(),
@@ -250,5 +250,99 @@ func (r InventoryRepository) CreateInventoryItem(ctx context.Context, item domai
 		}
 	}
 
+	return item, err
+}
+
+func (r InventoryRepository) GetInventoryItemBySKU(ctx context.Context, sku string) (domain.Item, error) {
+	rows, err := r.db.Query(
+		ctx,
+		`SELECT * FROM inventory_items WHERE sku = $1 LIMIT 1`,
+		sku,
+	)
+	if err != nil {
+		return domain.Item{}, err
+	}
+
+	var item domain.Item
+	err = pgxscan.ScanOne(&item, rows)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return item, domain.ErrItemNotFound
+		}
+	}
+	return item, err
+}
+
+func (r InventoryRepository) DeleteInventoryItem(ctx context.Context, id uuid.UUID) error {
+	_, err := r.db.Exec(
+		ctx,
+		`DELETE FROM inventory_items WHERE id = $1`,
+		id.String(),
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r InventoryRepository) GetInventoryItemByID(ctx context.Context, id uuid.UUID) (domain.Item, error) {
+	rows, err := r.db.Query(
+		ctx,
+		`SELECT * FROM inventory_items WHERE id = $1 LIMIT 1`,
+		id.String(),
+	)
+	if err != nil {
+		return domain.Item{}, err
+	}
+
+	var item domain.Item
+	err = pgxscan.ScanOne(&item, rows)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return item, domain.ErrItemNotFound
+		}
+	}
+	return item, err
+}
+
+func (r InventoryRepository) GetInventorySection(ctx context.Context, id uuid.UUID) (domain.Section, error) {
+	var section domain.Section
+	row := r.db.QueryRow(
+		ctx,
+		`SELECT * FROM inventory_sections WHERE id = $1`,
+		id.String(),
+	)
+	err := row.Scan(
+		&section.ID,
+		&section.InventoryID,
+		&section.Name,
+		&section.Description,
+		&section.CreatedAt,
+		&section.UpdatedAt,
+	)
+	if err != nil {
+		return domain.Section{}, err
+	}
+
+	return section, nil
+}
+
+func (r InventoryRepository) UpdateInventoryItem(ctx context.Context, item domain.Item) (domain.Item, error) {
+	rows, err := r.db.Query(
+		ctx,
+		`UPDATE inventory_items SET name = $1, description = $2, quantity = $3, sku = $4, updated_at = $5 WHERE id = $6 RETURNING *`,
+		item.Name, item.Description, item.Quantity, item.SKU, item.UpdatedAt, item.ID.String(),
+	)
+	if err != nil {
+		return domain.Item{}, err
+	}
+
+	err = pgxscan.ScanOne(&item, rows)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return item, domain.ErrItemNotFound
+		}
+	}
 	return item, err
 }

@@ -15,13 +15,19 @@ type InventoryRepository interface {
 	ListInventories(ctx context.Context, offset, limit uint64) ([]domain.Inventory, error)
 	DeleteInventory(ctx context.Context, id uuid.UUID) error
 
+	GetInventorySection(ctx context.Context, id uuid.UUID) (domain.Section, error)
 	GetInventorySections(ctx context.Context, inventoryID uuid.UUID) ([]domain.Section, error)
 	CreateInventorySection(ctx context.Context, section domain.Section) (domain.Section, error)
 	DeleteInventorySection(ctx context.Context, id uuid.UUID) error
 	UpdateInventorySection(ctx context.Context, section domain.Section) (domain.Section, error)
 
+	UpdateInventoryItem(ctx context.Context, item domain.Item) (domain.Item, error)
+	DeleteInventoryItem(ctx context.Context, id uuid.UUID) error
 	CreateInventoryItem(ctx context.Context, item domain.Item) (domain.Item, error)
 	GetInventoryItems(ctx context.Context, inventoryId uuid.UUID, sectionID *uuid.UUID, offset, limit uint64) ([]domain.Item, error)
+
+	GetInventoryItemBySKU(ctx context.Context, sku string) (domain.Item, error)
+	GetInventoryItemByID(ctx context.Context, id uuid.UUID) (domain.Item, error)
 }
 
 type InventoryService interface {
@@ -32,4 +38,6 @@ type InventoryService interface {
 	GetInventoryItems(ctx context.Context, inventoryId uuid.UUID, offset, limit uint64) ([]domain.Item, error)
 	GetInventoryItemsBySection(ctx context.Context, inventoryId, sectionID uuid.UUID, offset, limit uint64) ([]domain.Item, error)
 	CreateInventoryItem(ctx context.Context, inventory domain.Inventory, section domain.Section, item domain.Item) (domain.Item, error)
+	GetInventoryItemBySKU(ctx context.Context, sku string) (domain.Item, error)
+	DeleteInventoryItem(ctx context.Context, id uuid.UUID) error
 }

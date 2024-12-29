@@ -178,6 +178,28 @@ func (h InventoryHandler) CreateInventorySection(w http.ResponseWriter, r *http.
 	w.Write(res)
 }
 
+func (h InventoryHandler) GetInventoryItemBySKU(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	skuString := r.URL.Query().Get("sku")
+	if skuString != "" {
+		item, err := h.svc.GetInventoryItemBySKU(ctx, skuString)
+		if err != nil {
+			HandleError(w, err)
+			return
+		}
+
+		res, err := json.Marshal(newItemResponse(item))
+		if err != nil {
+			HandleError(w, err)
+			return
+		}
+
+		w.Write(res)
+		return
+	}
+}
+
 func (h InventoryHandler) GetInventoryItems(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
@@ -317,4 +339,23 @@ func (h InventoryHandler) CreateInventoryItem(w http.ResponseWriter, r *http.Req
 	}
 
 	w.Write(res)
+}
+
+func (h InventoryHandler) DeleteInventoryItem(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	itemIdString := chi.URLParam(r, "itemID")
+	itemId, err := uuid.Parse(itemIdString)
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	err = h.svc.DeleteInventoryItem(ctx, itemId)
+	if err != nil {
+		HandleError(w, err)
+		return
+	}
+
+	w.Write([]byte("ok"))
 }
